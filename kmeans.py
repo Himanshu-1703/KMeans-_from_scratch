@@ -27,7 +27,8 @@ class KMeans:
     
     def __manhattan_distance(self,X,centroid):
         distance = np.abs(X - centroid)
-        return distance
+        summed_distance = np.sum(distance,axis=1)
+        return summed_distance
 
     def __cluster_centroids(self,X,predictions):
         # empty array for each cluster centroid
