@@ -21,9 +21,13 @@ class KMeans:
         self.centroids = sample_rows
 
     def __euclidean_distance(self,X,centroid):
-        distance = np.square(X-centroid)
+        distance = np.square(X - centroid)
         summed_distance = np.sum(distance,axis=1)
         return np.sqrt(summed_distance)
+    
+    def __manhattan_distance(self,X,centroid):
+        distance = np.abs(X - centroid)
+        return distance
 
     def __cluster_centroids(self,X,predictions):
         # empty array for each cluster centroid
@@ -41,7 +45,7 @@ class KMeans:
         self.centroids = cluster_centers
 
 
-    def fit_predict(self,X):
+    def fit_predict(self,X,metric='euclidean'):
         # initialize the centroids
         self.__cluster_initialize(X)
 
@@ -49,10 +53,15 @@ class KMeans:
     
             # for each centroid(value of n_clusters)
             distances = []
+            # select the distance function
+            if metric == 'euclidean':
+                distance_function = self.__euclidean_distance
+            elif metric == 'manhattan':
+                distance_function = self.__manhattan_distance
             # loop and calculate distance for each cluster
             for i in range(self.n_clusters):
                 # calculate the distance for each data point
-                centroid_distance = self.__euclidean_distance(X,self.centroids[i,:])
+                centroid_distance = distance_function(X,self.centroids[i,:])
                 distances.append(centroid_distance)
 
             # make an array of all the distance values
